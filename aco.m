@@ -7,7 +7,7 @@ pheromoneGain = 2.5;
 pheromoneScale = 0.2;
 evaporationRate = 0.05;
 
-pheromone = zeros(H,n);
+pheromone = zeros(res,nvars);
 route = zeros(iter, antCount, nvars);
 errorMatrix = zeros(iter, nvars);
 bestAnt = [0, 0];
@@ -20,16 +20,16 @@ X3min = lb(3);
 X3max = ub(3);
 
 X1(1) = X1min;
-X1(H) = X1max;
-stepX1 = (X1max - X1min)/(H-1);
+X1(res) = X1max;
+stepX1 = (X1max - X1min)/(res-1);
 X2(1) = X2min;
-X2(H) = X2max;
-stepX2 = (X2max - X2min)/(H-1);
+X2(res) = X2max;
+stepX2 = (X2max - X2min)/(res-1);
 X3(1) = X3min;
-X3(H) = X3max;
-stepX3 = (X3max - X3min)/(H-1);
+X3(res) = X3max;
+stepX3 = (X3max - X3min)/(res-1);
 
-for j=2:H-1
+for j=2:res-1
     X1(j) = j*stepX1;
     X2(j) = j*stepX2;
     X3(j) = j*stepX3;
@@ -48,16 +48,16 @@ pheromone(:) = initialPheromone;
 
 for l=1:iter
     
-    for g=1:n
+    for g=1:nvars
         alfa_pheromone=pheromone.^pheromoneGain;
         s=sum(alfa_pheromone(:,g));
         probabilityMatrix=(1/s).*alfa_pheromone;
     end
-    for i=1:M
-        for j=1:n
+    for i=1:antCount
+        for j=1:nvars
             r=rand;
             s=0;
-            for k=1:H 
+            for k=1:res 
                 s=s+probabilityMatrix(k,j);
                 if r<=s
                     route(l,i,j) = k;
@@ -76,8 +76,8 @@ for l=1:iter
         pheromone(route(l,i,3),3) = pheromone(route(l,i,3),3) + (pheromoneScale/errorMatrix(l,i));
     end
     
-    for jj=1:n
-        for ii=1:H
+    for jj=1:nvars
+        for ii=1:res
             pheromone(ii,jj)=(1-evaporationRate).*pheromone(ii,jj)+(1/minError);
         end
     end

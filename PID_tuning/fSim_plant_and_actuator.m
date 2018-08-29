@@ -1,4 +1,4 @@
-function [time, y, error] = Sim_plant_and_actuator(P_pid, I_pid, D_pid)
+function [time, y, error] = fSim_plant_and_actuator(P_pid, I_pid, D_pid)
 P = P_pid;
 I = I_pid;
 D = D_pid;
